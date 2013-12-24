@@ -1,0 +1,17 @@
+body {
+	font-size:16px;
+	font-family: arial;
+}
+
+#code { height:100%; right:200px; left:0px; position:absolute; }
+
+#code h2 { margin-left:56px; }
+#code p { margin-left:56px; }
+#code .lineNumbers { position:absolute; padding:0.5em; }
+#code .lineNumbers span { display:block; }
+#code .lineNumbers span.current { color:#f00;; }
+#code textarea { height:100%; position:absolute; left:3em; min-width:1000px; resize:none; padding: 0.5em;}
+#code textarea, .lineNumbers { font-size:18px; font-family: monospace; }
+
+aside { width:200px; position: absolute; top: 0px;right: 0px; }
+aside p { margin:4px; }

@@ -1,0 +1,63 @@
+<div>
+	<section id="code" >
+		<h2>Code</h2>
+		<p>
+			<button ng-click="start()">Start</button>
+			<button ng-click="stop()">Stop</button>
+			<button ng-click="reset()">Reset</button>
+			<span>|</span>
+			<button ng-click="saveFile()">Save</button>
+			<input type="range" min="0" max="1000" ng-model="speed" />
+		</p>
+		<div class="lineNumbers">
+			<span ng-repeat="line in code track by $index" ng-class="{current: line.n == pc}">{{line.nn}}<span>
+		</div>
+		<textarea id="input" ng-model="input" ng-keydown="keydown($event)" ng-trim='false'></textarea>
+	</section>
+	<aside>
+		<h2>State</h2>
+		<p>
+			<span ng-show="running">Running</span>
+			<span ng-show="!running">Not Running</span>
+		</p>
+		<p>
+			<span>PC</span>
+			<input ng-model="pc" />
+		</p>
+		<h3>Status</h3>
+		<p>
+			<span>se</span>
+			<input ng-model="se" />
+		</p>
+		<h3>Registers</h3>
+		<p>
+			<span>RA</span>
+			<input ng-model="ra" />
+		</p>
+		<p>
+			<span>RB</span>
+			<input ng-model="rb" />
+		</p>
+		<p>
+			<span>RC</span>
+			<input ng-model="rc" />
+		</p>
+		<p>
+			<span>RD</span>
+			<input ng-model="rd" />
+		</p>
+		<p>
+			<span>RE</span>
+			<input ng-model="re" />
+		</p>
+		
+		<h3>Log</h3>
+		<textarea ng-model="log"></textarea>
+		
+		
+		<h3>Memory</h3>
+		<div ng-repeat="byte in memory track by $index">
+			{{$index}} - {{byte}}
+		</div>
+	</aside>
+</div>
