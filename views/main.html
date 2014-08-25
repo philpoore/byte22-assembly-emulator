@@ -1,6 +1,14 @@
 <div>
 	<section id="code" >
 		<h2>Code</h2>
+		<div class="lineNumbers">
+			<span ng-repeat="line in code track by $index" ng-class="{current: line.n == pc}">{{line.nn}}<span>
+		</div>
+		<textarea id="input" ng-model="input" ng-keydown="keydown($event)" ng-keyup="keyup($event)" ng-trim='false'></textarea>
+	</section>
+	
+	<section id="state">
+		<h2>Controls</h2>
 		<p>
 			<button ng-click="start()">Start</button>
 			<button ng-click="stop()">Stop</button>
@@ -9,12 +17,6 @@
 			<button ng-click="saveFile()">Save</button>
 			<input type="range" min="0" max="1000" ng-model="speed" />
 		</p>
-		<div class="lineNumbers">
-			<span ng-repeat="line in code track by $index" ng-class="{current: line.n == pc}">{{line.nn}}<span>
-		</div>
-		<textarea id="input" ng-model="input" ng-keydown="keydown($event)" ng-trim='false'></textarea>
-	</section>
-	<aside>
 		<h2>State</h2>
 		<p>
 			<span ng-show="running">Running</span>
@@ -50,14 +52,24 @@
 			<span>RE</span>
 			<input ng-model="re" />
 		</p>
-		
+		<p>
+			<span>RF</span>
+			<input ng-model="rf" />
+		</p>
+		<section id="memory">
+			<h3>Memory</h3>
+			<table>
+				<tr ng-repeat="byte in memory track by $index">
+					<td>{{hex($index)}}</td>
+					<td>{{byte}}</td>
+				</tr>
+			</table>
+		</section>
+	</section>
+	
+	
+	<section id="log">
 		<h3>Log</h3>
 		<textarea ng-model="log"></textarea>
-		
-		
-		<h3>Memory</h3>
-		<div ng-repeat="byte in memory track by $index">
-			{{$index}} - {{byte}}
-		</div>
-	</aside>
+	</section>
 </div>

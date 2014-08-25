@@ -1,0 +1,29 @@
+// simple fib program
+
+load ra 6
+load rb 0
+
+
+load rc 0
+load rd 1
+load re 0
+
+
+top:
+	inc rb
+
+	cmp ra rb
+	je end
+
+	mov re rd
+	add re rc
+	
+	mov rc rd
+	mov rd re
+
+
+	jmp top
+
+end:
+	mov rb rd
+	log rb

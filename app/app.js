@@ -24,27 +24,31 @@ function strPad(str, len, char){
 	return buf + str;
 }
 
+var timer;
+
+var MEM_SIZE = 16;
  
 function MainCntl($scope, $route, $routeParams, $location) {
-	
-	
 	
 
 	$scope.first_line = 0;
 	$scope.last_line = 0;
 
-
-
-	$scope.input = "";
+	$scope.input = localStorage.getItem("input") || "";
 	$scope.code = [];
 	$scope.lines = [];
-	$scope.speed = 500;
+	$scope.speed = 100;
 	
-	$scope.memory = new Int8Array(10);
 
 	$scope.$watch('input', function() {
 		$scope.process();
 	});
+	
+	
+	$scope.hex = function (i){
+		var b = i.toString(16);
+		return (new Array(5 - b.length)).join("0") + b;
+	}
 
 	//$scope.input = ['\n','\n\t// welcome to A','\n','\tlog 1','\tlog 2','\tlog 3'].join('\n');
 	$scope.numberLines = function(lines){
@@ -65,7 +69,6 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		$scope.code = $scope.numberLines($scope.lines);
 	}
 	
-	var timer;
 	$scope.start = function (){
 				
 		$scope.process();
@@ -110,7 +113,9 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		$scope.rc = 0;
 		$scope.rd = 0;
 		$scope.re = 0;
+		$scope.rf = 0;
 		$scope.log = "";
+		$scope.memory = new Uint8Array(MEM_SIZE);
 		
 		$scope.stop();
 	}
@@ -120,6 +125,8 @@ function MainCntl($scope, $route, $routeParams, $location) {
 	$scope.process();
 	
 	$scope.keydown = function ($event){
+		
+		
 		switch ($event.keyCode){
 			case 9:
 				$event.preventDefault();
@@ -139,6 +146,10 @@ function MainCntl($scope, $route, $routeParams, $location) {
 			default:
 				break;
 		}
+	}
+	
+	$scope.keyup = function ($event){
+		localStorage.setItem('input', $scope.input);
 	}
 	$scope.saveFile = function () {
 		var textToWrite = $scope.input;
@@ -173,7 +184,11 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		var c;
 				
 		// cmd : log x
-		if (c = line.match(/^log (.*)/i)){
+		if (c = line.match(/^log (.*) "(.*)" (.*)/i)){
+			log(c[1], c[2], c[3]);
+		}else if (c = line.match(/^log "(.*)" (.*)/i)){
+			log(c[1], c[2]);
+		}else if (c = line.match(/^log (.*)/i)){
 			log(c[1]);
 		}
 		
@@ -231,14 +246,27 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		if (c = line.match(/^je (.*)/i)){
 			je(c[1]);
 		}
+		
+		// cmd : jn x
+		if (c = line.match(/^jn (.*)/i)){
+			jn(c[1]);
+		}
 	}
 	
 	
-	function log(a){
-		if ($scope[a] !== undefined){
-			$scope.log += ["log ",a," -> ",$scope[a],"\n"].join("");
+	function log(a, b, c){
+		console.log(a,b);
+		if ($scope[a] !== undefined && $scope[c] !== undefined){
+			b = ("" + b).replace(/"/g,"");
+			a = $scope[a] || "";
+			c = $scope[c] || "";
+			$scope.log += [a,b,c+"\n"].join(" ");
+		}else if ($scope[a] !== undefined){
+			$scope.log += [a," -> ",$scope[a],"\n"].join("");
 		}else{
-			$scope.log += ["log -> ",a,"\n"].join("");
+			a = ("" + a).replace(/"/g,"");
+			b = $scope[b] || "";
+			$scope.log += [a," ",b,"\n"].join("");
 		}
 	}
 	
@@ -286,15 +314,32 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		}
 	}
 	function mov(a, b){
+		var index;
 		if ($scope[a] !== undefined && $scope[b] !== undefined){
+			// reg = reg
 			$scope[a] = $scope[b];
+		}else if ($scope[a] !== undefined && (index = b.match(/\[([0-9]*)\]/)) ){
+			// reg = [mem]
+			index = parseInt(index[1]);
+			$scope[a] = $scope.memory[index];
+		}else if ($scope[b] !== undefined && (index = a.match(/\[([0-9]*)\]/)) ){
+			// [mem] = reg
+			index = parseInt(index[1]);
+			$scope.memory[index] = $scope[b];
+		}else if ($scope[a] !== undefined && (index = b.match(/\[(.*)\]/)) ){
+			// reg = [reg]
+			index = index[1];
+			$scope[a] = $scope.memory[$scope[index]];
+		}else if ($scope[b] !== undefined && (index = a.match(/\[(.*)\]/)) ){
+			// [reg] = reg
+			index = index[1];
+			$scope.memory[$scope[index]] = $scope[b];
 		}
 	}
 	function jump(a){
 		$scope.code.map(function (l){
 			if (l.line.indexOf(a + ":") == 0){
 				$scope.pc = l.n - 1;			// jump  to line before
-				//console.log("jmp %s",a);
 			}
 		});
 	}
@@ -307,13 +352,12 @@ function MainCntl($scope, $route, $routeParams, $location) {
 	}
 	function je(a){
 		if ($scope.se)
-		$scope.code.map(function (l){
-			if (l.line.indexOf(a + ":") == 0){
-				$scope.pc = l.n - 1;			// jump  to line before
-				//console.log("je %s",a);
-			}
-		});
+			jump(a)
 	}
 	
+	function jn(a){
+		if (!$scope.se)
+			jump(a)
+	}
 	
 }

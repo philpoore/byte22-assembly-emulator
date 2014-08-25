@@ -1,0 +1,20 @@
+// simple factorial program
+
+load ra 5
+load rb 0
+
+
+load rc 0
+
+load rb 1
+top:
+	inc rc
+	mul rb rc
+	cmp ra rc
+	je end
+
+	jmp top
+
+
+end:
+	log rb

@@ -1,0 +1,41 @@
+// Complex fib program
+
+load ra 10
+load rb 0
+
+
+
+
+top:
+	cmp rb ra
+	je end
+	inc rb
+	load rc 0
+
+	load rd 0
+	load re 1
+	load rf 0
+
+loop:
+
+	inc rc
+
+	cmp rb rc
+	je log
+
+	mov rf re
+	add rf rd
+	
+	mov rd re
+	mov re rf
+
+
+
+	jmp loop
+
+log:
+	log re
+	jmp top
+
+end:
+	// done !
