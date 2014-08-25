@@ -3,6 +3,7 @@ body {
 	font-family: arial;
 }
 
+header { padding: 1em 3em 0; }
 
 table { border-collapse: collape; width:90%;}
 table td { padding:2px 5px; border: 1px solid #ccc; }
@@ -10,11 +11,9 @@ table td { padding:2px 5px; border: 1px solid #ccc; }
 
 #memory table td:first-of-type { width:40px; }
 
+
+
 #code { height:100%; float: left; width:50%; position: relative; }
-#log { height:100%; float: left; width:40%; position: relative; }
-#state { height:100%; float: left; width:10%; position: relative; }
-
-
 #code h2 { margin-left:56px; }
 #code p { margin-left:56px; }
 #code .lineNumbers { position:absolute; padding:0.5em 1.5em; }
@@ -22,8 +21,12 @@ table td { padding:2px 5px; border: 1px solid #ccc; }
 #code .lineNumbers span.current { color:#f00; font-weight: bolder;; }
 #code .lineNumbers span.current::before { content: '-> '; position: absolute; left: 0px; }
 #code textarea { height:100%; position:absolute; left:6%; width:90%; resize:none; padding: 0.5em;}
+
 textarea, .lineNumbers { font-size:18px; font-family: monospace; }
 
+
+#state { height:100%; float: left; width:10%; position: relative; }
 #state p { margin:4px; }
 
+#log { height:100%; float: left; width:40%; position: relative; }
 #log textarea { width:90%; height:50%; }

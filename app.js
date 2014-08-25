@@ -1,20 +1,10 @@
-angular.module('A', ['ngRoute', 'ngAnimate'],
-  function($routeProvider, $locationProvider) {
-    $routeProvider.when('/', {
-      templateUrl: 'views/main.html',
-      controller: MainCntl,
-      controllerAs: 'book'
-    });
- 
-    // configure html5 to get links working on jsfiddle
-    $locationProvider.html5Mode(true);
-});
+
+var timer;
+var MEM_SIZE = 16;
 
 function toLines(str){
 	return str !== "" ? str.split('\n') : [];
 }
-
-
 
 function strPad(str, len, char){
 	str = str + '';
@@ -24,11 +14,9 @@ function strPad(str, len, char){
 	return buf + str;
 }
 
-var timer;
+angular.module('A',['ng']);
 
-var MEM_SIZE = 16;
- 
-function MainCntl($scope, $route, $routeParams, $location) {
+function MainCntl($scope) {
 	
 
 	$scope.first_line = 0;
@@ -50,7 +38,6 @@ function MainCntl($scope, $route, $routeParams, $location) {
 		return (new Array(5 - b.length)).join("0") + b;
 	}
 
-	//$scope.input = ['\n','\n\t// welcome to A','\n','\tlog 1','\tlog 2','\tlog 3'].join('\n');
 	$scope.numberLines = function(lines){
 		return lines.map(function (l, i){
 			return {
@@ -133,7 +120,6 @@ function MainCntl($scope, $route, $routeParams, $location) {
 				var start = document.getElementById("input").selectionStart;
 		        var end = document.getElementById("input").selectionEnd;
 
-		        // set textarea value to: text before caret + tab + text after caret
 		        $scope.input = $scope.input.substring(0, start) + "\t" + $scope.input.substring(end);
 				
 				setTimeout(function (){
@@ -255,7 +241,6 @@ function MainCntl($scope, $route, $routeParams, $location) {
 	
 	
 	function log(a, b, c){
-		console.log(a,b);
 		if ($scope[a] !== undefined && $scope[c] !== undefined){
 			b = ("" + b).replace(/"/g,"");
 			a = $scope[a] || "";
